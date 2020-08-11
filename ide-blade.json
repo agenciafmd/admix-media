@@ -1,0 +1,8 @@
+{
+    "namespaces": [
+        {
+            "namespace": "agenciafmd/media",
+            "path": "src/resources/views"
+        }
+    ]
+}
