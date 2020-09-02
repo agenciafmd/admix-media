@@ -1,6 +1,6 @@
 <?php
 
-namespace Agenciafmd\Media;
+namespace Agenciafmd\Media\Traits;
 
 use Illuminate\Support\Str;
 use Spatie\Image\Manipulations;
@@ -196,7 +196,6 @@ trait MediaTrait
     public function conversionsCollection($collection)
     {
         $fields = collect($this->fieldsToConversion()[$collection]['sources']);
-
         return $fields->map(function ($field) {
 
             $field2x = $field;
