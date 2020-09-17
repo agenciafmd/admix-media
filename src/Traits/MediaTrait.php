@@ -4,12 +4,12 @@ namespace Agenciafmd\Media\Traits;
 
 use Illuminate\Support\Str;
 use Spatie\Image\Manipulations;
-use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
-use Spatie\MediaLibrary\Models\Media;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 trait MediaTrait
 {
-    use HasMediaTrait;
+    use InteractsWithMedia;
 
     public static function bootMediaTrait()
     {
@@ -144,7 +144,7 @@ trait MediaTrait
             ->toMediaCollection($collection);
     }
 
-    public function registerMediaConversions(Media $media = null)
+    public function registerMediaConversions(Media $media = null): void
     {
         $fields = $this->fieldsToConversion();
         foreach ($fields as $collection => $field) {
