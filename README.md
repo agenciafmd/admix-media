@@ -32,8 +32,8 @@ php artisan migrate
 Uma vez que usamos como base o [spatie/laravel-medialibrary](https://github.com/spatie/laravel-medialibrary) o processo de instalação é quase o mesmo.
 
 ```php
-use Agenciafmd\Media\MediaTrait;
-use Spatie\MediaLibrary\HasMedia\HasMedia;
+use Agenciafmd\Media\Traits\MediaTrait;
+use Spatie\MediaLibrary\HasMedia;
 
 class YourModel extends Model implements HasMedia
 {
@@ -69,6 +69,8 @@ Sei que parece complicado, mas na prática é mais facil.
 return [
     'customer' => [ //nome da model em minusculo
         'image' => [ //nome do campo em minusculo
+            'label' => 'imagem', //label do campo
+            'multiple' => false, //se permite o upload multiplo
             'sources' => [
                 [
                     'conversion' => 'min-width-1366',
@@ -113,13 +115,36 @@ Para colocarmos o campo de upload no nosso pacote, vamos até o `form.blade.php`
 Por convenção, manteremos o plural do campo, sempre que for upload múltiplo.
 
 ```blade
-{{ Form::bsxImage('Imagem', 'image', $model) }}
+<x-admix::forms.group label="imagem ({{ config('upload-configs.user.sources.image.width') }}x{{ config('upload-configs.user.sources.image.height') }})"
+                      for="image">
+    <x-ui.image name="image" :model="$model"/>
+</x-admix::forms.group>
 
-{{ Form::bsxImages('Imagens', 'images', $model) }}
+<x-admix::forms.group label="imagens ({{ config('upload-configs.user.sources.images.width') }}x{{ config('upload-configs.user.sources.images.height') }})"
+                      for="images"
+                      multiple="true">
+    <x-ui.images name="images" :model="$model"/>
+</x-admix::forms.group>
 
 {{ Form::bsxFile('Arquivo', 'file', $model) }}
 
 {{ Form::bsxFiles('Arquivos', 'files', $model) }}
+```
+
+Ou o modo "lazy" onde o `user` é o nome da nossa `model` em minusculo
+
+```blade
+@foreach(config('upload-configs.user') as $field => $upload)
+    <x-admix::forms.group :multiple="$upload['multiple']"
+                          label="{{ $upload['label'] }} ({{ $upload['sources'][0]['width'] }}x{{ $upload['sources'][0]['height'] }})"
+                          for="{{ $field }}">
+        @if($upload['multiple'])
+            <x-ui.images name="{{ $field }}" :model="$model"/>
+        @else
+            <x-ui.image name="{{ $field }}" :model="$model"/>
+        @endif
+    </x-admix::forms.group>
+@endforeach
 ```
 
 Não podemos esquecer do nosso querido Request
