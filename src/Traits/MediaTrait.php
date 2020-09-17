@@ -121,26 +121,26 @@ trait MediaTrait
 
     public function doUpload($file, $collection = 'image', $customProperties = [])
     {
-        $name = Str::slug($this->attributes['name'] . '-' . date('ymdHisv'));
+        $name = Str::slug($this->attributes['name'] . '-' . date('YmdHisv'));
         $fileName = $name . '.' . Str::lower(pathinfo($file)['extension']);
 
         $this->clearMediaCollection($collection)
             ->addMedia($file)
             ->usingName($name)
             ->usingFileName($fileName)
-            ->withCustomProperties(array_merge(['uuid' => uniqid()], $customProperties))
+            ->withCustomProperties(array_merge(['uuid' => Str::uuid()], $customProperties))
             ->toMediaCollection($collection);
     }
 
     public function doUploadMultiple($file, $collection = 'images', $customProperties = [])
     {
-        $name = Str::slug($this->attributes['name'] . '-' . date('ymdHisv'));
+        $name = Str::slug($this->attributes['name'] . '-' . date('YmdHisv'));
         $fileName = $name . '.' . Str::lower(pathinfo($file)['extension']);
 
         $this->addMedia($file)
             ->usingName($name)
             ->usingFileName($fileName)
-            ->withCustomProperties(array_merge(['uuid' => uniqid()], $customProperties))
+            ->withCustomProperties(array_merge(['uuid' => Str::uuid()], $customProperties))
             ->toMediaCollection($collection);
     }
 

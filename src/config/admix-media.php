@@ -3,6 +3,8 @@
 return [
     'queue' => true,
 
+    'path_generator' => \Agenciafmd\Media\Support\PathGenerator\DefaultPathGenerator::class,
+
     'image_optimizers' => [
 
         //https://webmasters.stackexchange.com/questions/102094/google-pagespeed-how-to-satisfy-the-new-image-compression-rules

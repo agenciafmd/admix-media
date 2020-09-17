@@ -117,5 +117,7 @@ class MediaServiceProvider extends ServiceProvider
     protected function loadConfigs()
     {
         $this->mergeConfigFrom(__DIR__ . '/../config/admix-media.php', 'admix-media');
+
+        config(['media-library.path_generator' => config('admix-media.path_generator')]);
     }
 }
