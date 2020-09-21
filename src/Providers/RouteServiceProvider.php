@@ -9,17 +9,10 @@ class RouteServiceProvider extends ServiceProvider
 {
     public function boot()
     {
-        parent::boot();
-    }
-
-    public function map()
-    {
-        $this->mapWebRoutes();
-    }
-
-    protected function mapWebRoutes()
-    {
-        Route::middleware('web')
-            ->group(__DIR__ . '/../routes/web.php');
+        $this->routes(function () {
+            Route::prefix(config('admix.url'))
+                ->middleware(['web', 'auth:admix-web'])
+                ->group(__DIR__ . '/../routes/web.php');
+        });
     }
 }
