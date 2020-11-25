@@ -115,35 +115,24 @@ Para colocarmos o campo de upload no nosso pacote, vamos até o `form.blade.php`
 Por convenção, manteremos o plural do campo, sempre que for upload múltiplo.
 
 ```blade
-<x-admix::forms.group label="imagem ({{ config('upload-configs.user.sources.image.width') }}x{{ config('upload-configs.user.sources.image.height') }})"
-                      for="image">
-    <x-ui.image name="image" :model="$model"/>
-</x-admix::forms.group>
+{{ Form::bsImage('Imagem', 'image', $model) }}
 
-<x-admix::forms.group label="imagens ({{ config('upload-configs.user.sources.images.width') }}x{{ config('upload-configs.user.sources.images.height') }})"
-                      for="images"
-                      multiple="true">
-    <x-ui.images name="images" :model="$model"/>
-</x-admix::forms.group>
+{{ Form::bsImages('Imagens', 'images', $model) }}
 
-{{ Form::bsxFile('Arquivo', 'file', $model) }}
+{{ Form::bsMedia('Arquivo', 'file', $model) }}
 
-{{ Form::bsxFiles('Arquivos', 'files', $model) }}
+{{ Form::bsMedias('Arquivos', 'files', $model) }}
 ```
 
 Ou o modo "lazy" onde o `user` é o nome da nossa `model` em minusculo
 
 ```blade
 @foreach(config('upload-configs.user') as $field => $upload)
-    <x-admix::forms.group :multiple="$upload['multiple']"
-                          label="{{ $upload['label'] }} ({{ $upload['sources'][0]['width'] }}x{{ $upload['sources'][0]['height'] }})"
-                          for="{{ $field }}">
-        @if($upload['multiple'])
-            <x-ui.images name="{{ $field }}" :model="$model"/>
-        @else
-            <x-ui.image name="{{ $field }}" :model="$model"/>
-        @endif
-    </x-admix::forms.group>
+    @if($upload['multiple'])
+        {{ Form::bsImage($upload['label'], $field, $model) }}
+    @else
+        {{ Form::bsImages($upload['label'], $field, $model) }}
+    @endif
 @endforeach
 ```
 
