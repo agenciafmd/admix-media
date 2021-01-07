@@ -13,7 +13,26 @@ trait MediaTrait
 
     public static function bootMediaTrait()
     {
-        //
+        static::saved(function ($model) {
+            $request = request();
+
+            if($request->media) {
+                foreach ($request->media as $media) {
+                    if (is_array($media['collection'])) {
+                        $collection = reset($media['collection']);
+                        $file = storage_path('admix/tmp') . "/" . reset($media['name']);
+
+                        $model->doUploadMultiple($file, $collection);
+
+                    } else {
+                        $collection = $media['collection'];
+                        $file = storage_path('admix/tmp') . "/{$media['name']}";
+
+                        $model->doUpload($file, $collection);
+                    }
+                }
+            }
+        });
     }
 
     public function picture($collection = 'image', $class = 'img-fluid')
