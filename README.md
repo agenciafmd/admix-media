@@ -71,6 +71,7 @@ return [
         'image' => [ //nome do campo em minusculo
             'label' => 'imagem', //label do campo
             'multiple' => false, //se permite o upload multiplo
+            'faker_dir' => false, #database_path('faker/customer/image'),
             'sources' => [
                 [
                     'conversion' => 'min-width-1366',
@@ -109,6 +110,42 @@ return [
 ];
 ```
 
+## Seeder
+
+Configure o seeder para receber as imagens 
+
+```php
+...
+
+$faker = Factory::create('pt_BR');
+
+Category::factory($this->total)
+    ->create()
+    ->each(function ($category) use ($faker) {
+        foreach (config('upload-configs.faqs-categories') as $key => $image) {
+            $fakerDir = __DIR__ . '/../faker/faqs-categories/' . $key;
+
+            if ($image['faker_dir']) {
+                $fakerDir = $image['faker_dir'];
+            }
+
+            if ($image['multiple']) {
+                $items = $faker->numberBetween(0, 6);
+                for ($i = 0; $i < $items; $i++) {
+                    $category->doUploadMultiple($faker->file($fakerDir, storage_path('admix/tmp')), $key);
+                }
+            } else {
+                $category->doUpload($faker->file($fakerDir, storage_path('admix/tmp')), $key);
+            }
+        }
+
+        $category->save();
+
+        $this->command->getOutput()
+            ->progressAdvance();
+    });
+```
+
 ## Admix
 
 Para colocarmos o campo de upload no nosso pacote, vamos até o `form.blade.php`
@@ -129,9 +166,9 @@ Ou o modo "lazy" onde o `user` é o nome da nossa `model` em minusculo
 ```blade
 @foreach(config('upload-configs.user') as $field => $upload)
     @if($upload['multiple'])
-        {{ Form::bsImage($upload['label'], $field, $model) }}
-    @else
         {{ Form::bsImages($upload['label'], $field, $model) }}
+    @else
+        {{ Form::bsImage($upload['label'], $field, $model) }}
     @endif
 @endforeach
 ```

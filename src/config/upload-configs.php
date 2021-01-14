@@ -8,6 +8,9 @@
 
 //return [
 //    'customer' => [ //nome da model em minusculo
+//        'label' => 'imagem', //label do campo
+//        'multiple' => false, //se permite o upload multiplo
+//        'faker_dir' => false, #database_path('faker/customer/image'),
 //        'image' => [ //nome do campo
 //            'sources' => [
 //                [
@@ -25,6 +28,9 @@
 //            ],
 //        ],
 //        'images' => [
+//        'label' => 'imagens', //label do campo
+//        'faker_dir' => false, #database_path('faker/customer/images'),
+//        'multiple' => true, //se permite o upload multiplo
 //            'sources' => [
 //                [
 //                    'conversion' => 'min-width-1366',
