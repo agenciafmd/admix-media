@@ -8,7 +8,7 @@
 
 ## Instalação
 
-```shell script
+```bash
 composer require agenciafmd/admix-media:dev-master
 ```
 
@@ -25,7 +25,7 @@ sudo apt-get install webp
 
 Execute a migração
 
-```shell script
+```bash
 php artisan migrate
 ```
 
@@ -55,7 +55,7 @@ Por padrão, as configurações do pacote são:
 
 Se for preciso, você pode customizar estas configurações
 
-```shell script
+```bash
 php artisan vendor:publish --force --tag=admix-media:config
 ```
 
