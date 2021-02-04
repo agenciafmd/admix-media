@@ -16,7 +16,7 @@ trait MediaTrait
         static::saved(function ($model) {
             $request = request();
 
-            if($request->media) {
+            if ($request->media) {
                 foreach ($request->media as $media) {
                     if (is_array($media['collection'])) {
                         $collection = reset($media['collection']);
@@ -80,24 +80,6 @@ trait MediaTrait
 
                 return view(config('admix-media.fancy_picture_view'), $view);
             });
-    }
-
-    private function pictureHtml($media, $sources, $class)
-    {
-        foreach ($sources as $source) {
-            $conversions[$source['media']] = [
-                'conversion' => $media->getUrl($source['conversion']),
-                'conversion2x' => str_replace('%40', '@', $media->getUrl($source['conversion'] . '@2x')),
-                'conversionWebp' => $media->getUrl($source['conversion'] . '-webp'),
-                'conversionWebp2x' => str_replace('%40', '@', $media->getUrl($source['conversion'] . '-webp@2x')),
-            ];
-        }
-
-        $view['conversions'] = $conversions;
-        $view['title'] = optional($media->getCustomProperty('meta'))[app()->getLocale()] ?? $media->name;
-        $view['class'] = $class;
-
-        return view(config('admix-media.picture_view'), $view);
     }
 
     public function file($collection = 'file')
@@ -222,5 +204,27 @@ trait MediaTrait
         $modelName = strtolower(class_basename($this));
 
         return config("upload-configs.{$modelName}");
+    }
+
+    private function pictureHtml($media, $sources, $class)
+    {
+        if (!$media) {
+            return false;
+        }
+
+        foreach ($sources as $source) {
+            $conversions[$source['media']] = [
+                'conversion' => $media->getUrl($source['conversion']),
+                'conversion2x' => str_replace('%40', '@', $media->getUrl($source['conversion'] . '@2x')),
+                'conversionWebp' => $media->getUrl($source['conversion'] . '-webp'),
+                'conversionWebp2x' => str_replace('%40', '@', $media->getUrl($source['conversion'] . '-webp@2x')),
+            ];
+        }
+
+        $view['conversions'] = $conversions;
+        $view['title'] = optional($media->getCustomProperty('meta'))[app()->getLocale()] ?? $media->name;
+        $view['class'] = $class;
+
+        return view(config('admix-media.picture_view'), $view);
     }
 }
