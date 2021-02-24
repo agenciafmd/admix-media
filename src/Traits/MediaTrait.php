@@ -67,6 +67,20 @@ trait MediaTrait
             });
     }
 
+    public function picturesWithMeta($collection = 'images', $class = 'img-fluid')
+    {
+        $sources = $this->fieldsToConversion()[$collection]['sources'];
+
+        return $this->getMedia($collection)
+            ->map(function ($media) use ($sources, $class) {
+
+                return (object)[
+                    'picture' => $this->pictureHtml($media, $sources, $class),
+                    'meta' => optional($media->getCustomProperty('meta')),
+                ];
+            });
+    }
+
     public function fancyPictures($collection = 'images', $class = 'img-fluid', $aClass = '')
     {
         $sources = $this->fieldsToConversion()[$collection]['sources'];
