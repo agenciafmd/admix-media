@@ -81,6 +81,8 @@ class UploadController extends Controller
                         $html .= '<option value="' . $option . '" ' . (($media->getCustomProperty("meta." . $field['name']) == $option) ? 'selected' : '') . '>' . $option . '</option>';
                     }
                     $html .= '</select>';
+                } elseif (isset($field['textarea'])) {
+                    $html .= '<textarea class="form-control" rows="10" name="meta[' . $field['name'] . ']">' . (($media->getCustomProperty("meta." . $field['name'])) ?? '') . '</textarea>';
                 } else {
                     $html .= '<input class="form-control" name="meta[' . $field['name'] . ']" type="text" value="' . (($media->getCustomProperty("meta." . $field['name'])) ?? '') . '">';
                 }

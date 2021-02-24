@@ -1,4 +1,4 @@
-## [WIP] F&MD - Media
+## F&MD - Media
 
 [![Downloads](https://img.shields.io/packagist/dt/agenciafmd/admix-media.svg?style=flat-square)](https://packagist.org/packages/agenciafmd/admix-media)
 [![Licença](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
@@ -103,6 +103,11 @@ return [
                 [
                     'label' => 'título',
                     'name' => 'title',
+                ],
+                [
+                    'label' => 'descrição',
+                    'name' => 'description',
+                    'textarea' => true,
                 ],
             ],
         ],
