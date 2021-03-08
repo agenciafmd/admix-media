@@ -96,6 +96,24 @@ trait MediaTrait
             });
     }
 
+    public function fancyPicturesWithMeta($collection = 'images', $class = 'img-fluid', $aClass = '')
+    {
+        $sources = $this->fieldsToConversion()[$collection]['sources'];
+
+        return $this->getMedia($collection)
+            ->map(function ($media) use ($collection, $sources, $class, $aClass) {
+                $view['dataFancybox'] = $collection;
+                $view['picture'] = $this->pictureHtml($media, $sources, $class);
+                $view['media'] = $media;
+                $view['aClass'] = $aClass;
+
+                return (object)[
+                    'picture' => view(config('admix-media.fancy_picture_view'), $view),
+                    'meta' => optional($media->getCustomProperty('meta')),
+                ];
+            });
+    }
+
     public function file($collection = 'file')
     {
         return $this->getFirstMedia($collection)
