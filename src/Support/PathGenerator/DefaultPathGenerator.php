@@ -29,6 +29,6 @@ class DefaultPathGenerator implements PathGenerator
 
     private function customPath(string $key)
     {
-        return implode('/', str_split(substr(md5($key), 0, 6), 2)) . '/' . $key;
+        return 'media/' . implode('/', str_split(substr(md5($key), 0, 6), 2)) . '/' . $key;
     }
 }
