@@ -116,8 +116,7 @@ trait MediaTrait
 
     public function file($collection = 'file')
     {
-        return $this->getFirstMedia($collection)
-            ->getUrl();
+        return $this->getFirstMediaUrl($collection);
     }
 
     public function files($collection = 'files')
