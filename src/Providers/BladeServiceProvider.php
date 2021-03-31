@@ -33,7 +33,7 @@ class BladeServiceProvider extends ServiceProvider
     protected function publish()
     {
         $this->publishes([
-            __DIR__ . '/../resources/views' => base_path('resources/views/vendor/agenciafmd/media'),
+            __DIR__ . '/../resources/views' => base_path('resources/views/vendor/media'),
         ], 'admix-media:views');
     }
 }
