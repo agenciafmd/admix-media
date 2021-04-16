@@ -2,6 +2,8 @@
 
 namespace Agenciafmd\Media\Traits;
 
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Spatie\Image\Manipulations;
 use Spatie\MediaLibrary\InteractsWithMedia;
@@ -20,15 +22,11 @@ trait MediaTrait
                 foreach ($request->media as $media) {
                     if (is_array($media['collection'])) {
                         $collection = reset($media['collection']);
-                        $file = storage_path('admix/tmp') . "/" . reset($media['name']);
-
-                        $model->doUploadMultiple($file, $collection);
+                        $model->doUploadMultiple(reset($media['name']), $collection);
 
                     } else {
                         $collection = $media['collection'];
-                        $file = storage_path('admix/tmp') . "/{$media['name']}";
-
-                        $model->doUpload($file, $collection);
+                        $model->doUpload($media['name'], $collection);
                     }
                 }
             }
@@ -132,9 +130,10 @@ trait MediaTrait
     {
         $name = Str::slug($this->attributes['name'] . '-' . date('YmdHisv'));
         $fileName = $name . '.' . Str::lower(pathinfo($file)['extension']);
+        $contents = Storage::get($file);
 
         $this->clearMediaCollection($collection)
-            ->addMedia($file)
+            ->addMediaFromString($contents)
             ->usingName($name)
             ->usingFileName($fileName)
             ->withCustomProperties(array_merge(['uuid' => Str::uuid()], $customProperties))
@@ -145,8 +144,9 @@ trait MediaTrait
     {
         $name = Str::slug($this->attributes['name'] . '-' . date('YmdHisv'));
         $fileName = $name . '.' . Str::lower(pathinfo($file)['extension']);
+        $contents = Storage::get($file);
 
-        $this->addMedia($file)
+        $this->addMediaFromString($contents)
             ->usingName($name)
             ->usingFileName($fileName)
             ->withCustomProperties(array_merge(['uuid' => Str::uuid()], $customProperties))
@@ -159,15 +159,15 @@ trait MediaTrait
         foreach ($fields as $collection => $field) {
             foreach ($this->conversionsCollection($collection) as $sources) {
                 foreach ($sources as $source) {
-                    $convertionName = $source['conversion'];
+                    $conversionName = $source['conversion'];
                     $width = $source['width'] ?? 800;
                     $height = $source['height'] ?? 600;
                     $crop = ($source['crop']) ?? true;
                     $optimize = ($source['optimize']) ?? true;
                     $quality = ($source['quality']) ?? 100;
-                    $webp = Str::contains($convertionName, '-webp') ? true : false;
+                    $webp = Str::contains($conversionName, '-webp');
 
-                    $conversion = $this->addMediaConversion($convertionName);
+                    $conversion = $this->addMediaConversion($conversionName);
 
                     if ($crop) {
                         $conversion->fit(Manipulations::FIT_CROP, $width, $height);
@@ -202,7 +202,7 @@ trait MediaTrait
         }
     }
 
-    public function conversionsCollection($collection)
+    public function conversionsCollection($collection): Collection
     {
         $fields = collect($this->fieldsToConversion()[$collection]['sources']);
         return $fields->map(function ($field) {

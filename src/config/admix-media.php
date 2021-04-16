@@ -3,6 +3,8 @@
 return [
     'queue' => true,
 
+    'disk_name' => env('FILESYSTEM_DRIVER', 'local'),
+
     'path_generator' => \Agenciafmd\Media\Support\PathGenerator\DefaultPathGenerator::class,
 
     'image_optimizers' => [

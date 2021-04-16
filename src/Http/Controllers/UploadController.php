@@ -4,6 +4,7 @@ namespace Agenciafmd\Media\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
@@ -16,32 +17,47 @@ class UploadController extends Controller
             return response('Arquivo não recebido', 400);
         }
 
-        $files = $request->file('file');
-
-        if (!is_array($files)) {
-            $files = [
-                $files,
-            ];
-        }
-
-        $tmpPath = storage_path('admix/tmp');
-        @mkdir($tmpPath, 0775, true);
+        $files = Arr::wrap($request->file('file'));
 
         $response = [];
         foreach ($files as $file) {
-            $fileInfo = pathinfo($file->getClientOriginalName());
-            $fileName = Str::slug(Str::limit($fileInfo['filename'], 50, '') . '-' . rand(1, 999)) . '.' . $file->getClientOriginalExtension();
-            $file->move($tmpPath, $fileName);
+            $path = $file->store('tmp');
 
             $response[] = [
                 'status' => 'success',
-                'name' => $fileName,
+                'name' => $path,
                 'collection' => $request->get('collection'),
                 'uuid' => uniqid(),
             ];
         }
 
         return $response;
+
+        // --------------
+//        if (!is_array($files)) {
+//            $files = [
+//                $files,
+//            ];
+//        }
+//
+//        $tmpPath = storage_path('admix/tmp');
+//        @mkdir($tmpPath, 0775, true);
+//
+//        $response = [];
+//        foreach ($files as $file) {
+//            $fileInfo = pathinfo($file->getClientOriginalName());
+//            $fileName = Str::slug(Str::limit($fileInfo['filename'], 50, '') . '-' . rand(1, 999)) . '.' . $file->getClientOriginalExtension();
+//            $file->move($tmpPath, $fileName);
+//
+//            $response[] = [
+//                'status' => 'success',
+//                'name' => $fileName,
+//                'collection' => $request->get('collection'),
+//                'uuid' => uniqid(),
+//            ];
+//        }
+//
+//        return $response;
     }
 
     public function destroy(Request $request)

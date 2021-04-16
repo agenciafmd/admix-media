@@ -54,6 +54,7 @@ class MediaServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__ . '/../config/admix-media.php', 'admix-media');
 
+        config(['media-library.disk_name' => config('admix-media.disk_name')]);
         config(['media-library.path_generator' => config('admix-media.path_generator')]);
     }
 }
