@@ -32,32 +32,6 @@ class UploadController extends Controller
         }
 
         return $response;
-
-        // --------------
-//        if (!is_array($files)) {
-//            $files = [
-//                $files,
-//            ];
-//        }
-//
-//        $tmpPath = storage_path('admix/tmp');
-//        @mkdir($tmpPath, 0775, true);
-//
-//        $response = [];
-//        foreach ($files as $file) {
-//            $fileInfo = pathinfo($file->getClientOriginalName());
-//            $fileName = Str::slug(Str::limit($fileInfo['filename'], 50, '') . '-' . rand(1, 999)) . '.' . $file->getClientOriginalExtension();
-//            $file->move($tmpPath, $fileName);
-//
-//            $response[] = [
-//                'status' => 'success',
-//                'name' => $fileName,
-//                'collection' => $request->get('collection'),
-//                'uuid' => uniqid(),
-//            ];
-//        }
-//
-//        return $response;
     }
 
     public function destroy(Request $request)
