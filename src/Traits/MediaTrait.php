@@ -33,60 +33,60 @@ trait MediaTrait
         });
     }
 
-    public function picture($collection = 'image', $class = 'img-fluid')
+    public function picture($collection = 'image', $class = 'img-fluid', $pictureClass = '')
     {
         $sources = $this->fieldsToConversion()[$collection]['sources'];
         $media = $this->getFirstMedia($collection);
 
-        return $this->pictureHtml($media, $sources, $class);
+        return $this->pictureHtml($media, $sources, $class, $pictureClass);
     }
 
-    public function fancyPicture($collection = 'image', $class = 'img-fluid', $aClass = '')
+    public function fancyPicture($collection = 'image', $class = 'img-fluid', $aClass = '', $pictureClass = '')
     {
         $sources = $this->fieldsToConversion()[$collection]['sources'];
         $media = $this->getFirstMedia($collection);
 
         $view['dataFancybox'] = $collection;
-        $view['picture'] = $this->pictureHtml($media, $sources, $class);
+        $view['picture'] = $this->pictureHtml($media, $sources, $class, $pictureClass);
         $view['media'] = $media;
         $view['aClass'] = $aClass;
 
         return view(config('admix-media.fancy_picture_view'), $view);
     }
 
-    public function pictures($collection = 'images', $class = 'img-fluid')
+    public function pictures($collection = 'images', $class = 'img-fluid', $pictureClass = '')
     {
         $sources = $this->fieldsToConversion()[$collection]['sources'];
 
         return $this->getMedia($collection)
-            ->map(function ($media) use ($sources, $class) {
+            ->map(function ($media) use ($sources, $class, $pictureClass) {
 
-                return $this->pictureHtml($media, $sources, $class);
+                return $this->pictureHtml($media, $sources, $class, $pictureClass);
             });
     }
 
-    public function picturesWithMeta($collection = 'images', $class = 'img-fluid')
+    public function picturesWithMeta($collection = 'images', $class = 'img-fluid', $pictureClass = '')
     {
         $sources = $this->fieldsToConversion()[$collection]['sources'];
 
         return $this->getMedia($collection)
-            ->map(function ($media) use ($sources, $class) {
+            ->map(function ($media) use ($sources, $class, $pictureClass) {
 
                 return (object)[
-                    'picture' => $this->pictureHtml($media, $sources, $class),
+                    'picture' => $this->pictureHtml($media, $sources, $class, $pictureClass),
                     'meta' => optional($media->getCustomProperty('meta')),
                 ];
             });
     }
 
-    public function fancyPictures($collection = 'images', $class = 'img-fluid', $aClass = '')
+    public function fancyPictures($collection = 'images', $class = 'img-fluid', $aClass = '', $pictureClass = '')
     {
         $sources = $this->fieldsToConversion()[$collection]['sources'];
 
         return $this->getMedia($collection)
-            ->map(function ($media) use ($collection, $sources, $class, $aClass) {
+            ->map(function ($media) use ($collection, $sources, $class, $aClass, $pictureClass) {
                 $view['dataFancybox'] = $collection;
-                $view['picture'] = $this->pictureHtml($media, $sources, $class);
+                $view['picture'] = $this->pictureHtml($media, $sources, $class, $pictureClass);
                 $view['media'] = $media;
                 $view['aClass'] = $aClass;
 
@@ -94,14 +94,14 @@ trait MediaTrait
             });
     }
 
-    public function fancyPicturesWithMeta($collection = 'images', $class = 'img-fluid', $aClass = '')
+    public function fancyPicturesWithMeta($collection = 'images', $class = 'img-fluid', $aClass = '', $pictureClass = '')
     {
         $sources = $this->fieldsToConversion()[$collection]['sources'];
 
         return $this->getMedia($collection)
-            ->map(function ($media) use ($collection, $sources, $class, $aClass) {
+            ->map(function ($media) use ($collection, $sources, $class, $aClass, $pictureClass) {
                 $view['dataFancybox'] = $collection;
-                $view['picture'] = $this->pictureHtml($media, $sources, $class);
+                $view['picture'] = $this->pictureHtml($media, $sources, $class, $pictureClass);
                 $view['media'] = $media;
                 $view['aClass'] = $aClass;
 
@@ -237,7 +237,7 @@ trait MediaTrait
         return config("upload-configs.{$modelName}");
     }
 
-    private function pictureHtml($media, $sources, $class)
+    private function pictureHtml($media, $sources, $class, $pictureClass)
     {
         if (!$media) {
             return false;
@@ -255,6 +255,7 @@ trait MediaTrait
         $view['conversions'] = $conversions;
         $view['title'] = optional($media->getCustomProperty('meta'))[app()->getLocale()] ?? $media->name;
         $view['class'] = $class;
+        $view['pictureClass'] = $pictureClass;
 
         return view(config('admix-media.picture_view'), $view);
     }
