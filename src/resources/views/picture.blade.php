@@ -6,7 +6,7 @@
                 srcset="{{ $conversion['conversion'] }}, {{ $conversion['conversion2x'] }} 2x">
     @endforeach
     <img src="data:image/png;base64, R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
-         loading="lazy"
+         @if($lazy) loading="lazy" @endif
          decoding="async"
          width="{{ $width }}"
          height="{{ $height }}"
