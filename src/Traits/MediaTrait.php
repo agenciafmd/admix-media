@@ -256,6 +256,8 @@ trait MediaTrait
         $view['title'] = optional($media->getCustomProperty('meta'))[app()->getLocale()] ?? $media->name;
         $view['class'] = $class;
         $view['pictureClass'] = $pictureClass;
+        $view['width'] = $sources[0]['width'] / 2;
+        $view['height'] = $sources[0]['height'] / 2;
 
         return view(config('admix-media.picture_view'), $view);
     }

@@ -8,6 +8,8 @@
     <img src="data:image/png;base64, R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
          loading="lazy"
          decoding="async"
+         width="{{ $width }}"
+         height="{{ $height }}"
          class="{{ $class }}"
          title="{{ $title }}"
          alt="{{ $title }}"></picture>
